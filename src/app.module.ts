@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
       dbName: process.env.DB_NAME
   }),
   UserModule,
+  AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
