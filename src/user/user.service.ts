@@ -80,6 +80,15 @@ export class UserService {
     }
   }
 
+   async getUserByEmail(email: string) {
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new HttpException('User is not found', 404);
+    }
+    return user;
+  }
+  
+  
   async remove(id: string) {
     const user = this.userModel.findOne({ id });
     if (!user) {
