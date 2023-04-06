@@ -8,10 +8,8 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost:27017', {
-      dbName: process.env.DB_NAME
-  }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot('mongodb+srv://karen66:karen66@karen66.aam70gr.mongodb.net/?retryWrites=true&w=majority'),
   UserModule,
   AuthModule
   ],
