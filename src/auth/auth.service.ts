@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login.dto';
+import { IUserData } from './interface/user-data.interface';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +21,8 @@ export class AuthService {
     return null;
   }
 
-  async login(authDto: LoginUserDto) {
-    const validUser = await this.validateUser(authDto);
-
-    if (!validUser) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-    const payload = { email: validUser.email, id: validUser.id };
-
+  async login(userData: IUserData) {
+    const payload = { email: userData.email, id: userData.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

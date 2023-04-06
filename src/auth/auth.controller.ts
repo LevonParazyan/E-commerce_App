@@ -1,14 +1,17 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { LoginUserDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
+import { IUserData } from './interface/user-data.interface';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -19,10 +22,12 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  @ApiCreatedResponse({ description: 'You have successfully logged in.' })
+  @ApiOkResponse({ description: 'You have successfully logged in.' })
+  @ApiUnauthorizedResponse({ description: 'User is not authorized'})
   @ApiBadRequestResponse({ description: 'Bad Request.' })
-  async login(@Body() authDto: LoginUserDto) {
-    return this.authService.login(authDto);
+  //@UseGuards(LocalAuthGuard)
+  async login(@Body() userData: IUserData) {
+    return this.authService.login(userData);
   }
 
   @Post('register')
