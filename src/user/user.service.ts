@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserInterface } from './interface/user.interface';
 import { UserDocument } from './schema/user.schema';
+import { HttpException } from '@nestjs/common'
 
 @Injectable()
 export class UserService {
@@ -12,6 +13,7 @@ export class UserService {
     @InjectModel('User')
     private readonly userModel: Model<UserDocument>
   ) {}
+  
   async create(payload: UserInterface) {
     const exists = this.userModel.findOne({ email: payload.email });
     if(!exists) {
@@ -56,6 +58,14 @@ export class UserService {
       throw new BadRequestException(err.message);
     }
     
+  }
+
+  async getUserByEmail(email: string) {
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new HttpException('User is not found', 404);
+    }
+    return user;
   }
 
   async update(id: string, payload: UserInterface) {
