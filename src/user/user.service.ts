@@ -1,23 +1,29 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserInterface } from './interface/user.interface';
 import { UserDocument } from './schema/user.schema';
-import { HttpException } from '@nestjs/common'
+import { HttpException } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User')
-    private readonly userModel: Model<UserDocument>
+    private readonly userModel: Model<UserDocument>,
   ) {}
-  
+
   async create(payload: UserInterface) {
     const exists = this.userModel.findOne({ email: payload.email });
-    if(!exists) {
-      throw new ConflictException(`User with email:${payload.email} already exists`)
+    if (!exists) {
+      throw new ConflictException(
+        `User with email:${payload.email} already exists`,
+      );
     }
     try {
       payload.password = await bcrypt.hash(payload.password, 10);
@@ -25,9 +31,9 @@ export class UserService {
       await user.save();
       return {
         message: 'User was successfully created',
-        user
-      }
-    } catch (err){
+        user,
+      };
+    } catch (err) {
       throw new BadRequestException(err.message);
     }
   }
@@ -37,8 +43,8 @@ export class UserService {
       const users = await this.userModel.find();
       return {
         message: 'The list of users',
-        users
-      }
+        users,
+      };
     } catch (err) {
       throw new BadRequestException(err.message);
     }
@@ -52,12 +58,11 @@ export class UserService {
       }
       return {
         message: `The user with id: ${id}`,
-        user
-      }
+        user,
+      };
     } catch (err) {
       throw new BadRequestException(err.message);
     }
-    
   }
 
   async getUserByEmail(email: string) {
@@ -76,42 +81,31 @@ export class UserService {
     try {
       const updatedUser = this.userModel
         .findByIdAndUpdate(id, payload, {
-          new: true
+          new: true,
         })
         .exec();
       return {
         message: `User with id: ${id} was updated`,
-        updatedUser
-      }
+        updatedUser,
+      };
     } catch (err) {
       console.log(err);
-      
+
       throw new BadRequestException(err.message);
     }
   }
 
-   async getUserByEmail(email: string) {
-    const user = await this.userModel.findOne({ email });
-    if (!user) {
-      throw new HttpException('User is not found', 404);
-    }
-    return user;
-  }
-  
-  
   async remove(id: string) {
     const user = this.userModel.findOne({ id });
     if (!user) {
       throw new ConflictException(`User with id: ${id} was not found`);
     }
     try {
-      const deletedUser = this.userModel
-        .findByIdAndDelete(id)
-        .exec();
+      const deletedUser = this.userModel.findByIdAndDelete(id).exec();
       return {
         message: `User with id: ${id} was deleted`,
-        deletedUser
-      }
+        deletedUser,
+      };
     } catch (err) {
       throw new BadRequestException(err.message);
     }
