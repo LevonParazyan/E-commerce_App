@@ -38,6 +38,12 @@ export class UserService {
     }
   }
 
+  async saveRefreshToken(userId: string, refreshToken: string): Promise<void> {
+    const filter = { _id: userId };
+    const update = { refreshToken: refreshToken };
+    await this.userModel.findOneAndUpdate(filter, update);
+  }
+
   async findAll() {
     try {
       const users = await this.userModel.find();

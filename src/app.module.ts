@@ -10,9 +10,7 @@ import { CategoryModule } from './category/category.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRoot(
-      'mongodb+srv://karen66:karen66@karen66.aam70gr.mongodb.net/?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.DB_NAME),
     UserModule,
     AuthModule,
     CategoryModule,

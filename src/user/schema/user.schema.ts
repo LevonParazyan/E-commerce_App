@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document} from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Document, SchemaTypes, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -37,6 +37,9 @@ export class User {
 
   @Prop()
   paymentInfo: string[];
+
+  @Prop()
+  refresh_token: string; // add a refresh_token field to the user schema
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

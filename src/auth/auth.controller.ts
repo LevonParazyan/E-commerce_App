@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post('login')
   @ApiOkResponse({ description: 'You have successfully logged in.' })
-  @ApiUnauthorizedResponse({ description: 'User is not authorized'})
+  @ApiUnauthorizedResponse({ description: 'User is not authorized' })
   @ApiBadRequestResponse({ description: 'Bad Request.' })
   //@UseGuards(LocalAuthGuard)
   async login(@Body() userData: IUserData) {
